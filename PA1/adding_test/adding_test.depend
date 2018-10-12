@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1536425618 source:/home/user/Dropbox/University/Fall_18/CSCI_3753/adding_test/main.c
+	<unistd.h>
+	<sys/syscall.h>
+	<sys/types.h>
+	<signal.h>
+	<stdio.h>
+	<stdlib.h>
+

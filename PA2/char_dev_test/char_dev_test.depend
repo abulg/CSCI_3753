@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1538671227 source:/home/user/Dropbox/University/Fall_18/CSCI_3753/char_dev_test/main.c
+	<stdio.h>
+	<stdlib.h>
+	<fcntl.h>
+	<unistd.h>
+	<stdbool.h>
+	<string.h>
+	<malloc.h>
+
