@@ -1,0 +1,70 @@
+performance.py may not have worked properly so I did these tests manually
+DNS caching, no averaging, and dead links may affect runtimes
+
+1 requester, 1 resolver:
+Number for requester thread = 1
+Number for resolver thread = 1
+Total run time:  7 seconds
+Thread 140659497441024 serviced 1 files
+
+1 requester, 3 resolver:
+Number for requester thread = 1
+Number for resolver thread = 3
+Total run time: 7 seconds
+Thread 139892515301120 serviced 1 files
+
+3 requester, 1 resolver:
+Number for requester thread = 3
+Number for resolver thread = 1
+Total run time: 268 seconds
+Thread 139825362945792 serviced 1 files
+Thread 139825354553088 serviced 1 files
+Thread 139825346160384 serviced 1 files
+
+3 requester, 3 resolver:
+Number for requester thread = 3
+Number for resolver thread = 3
+Total run time: 54 seconds
+Thread 140086868784896 serviced 1 files
+Thread 140086860392192 serviced 1 files
+Thread 140086851999488 serviced 1 files
+
+
+5 requester, 5 resolver:
+Number for requester thread = 5
+Number for resolver thread = 5
+Total run time: 55 seconds
+Thread 140026668562176 serviced 1 files
+Thread 140026651776768 serviced 1 files
+Thread 140026643384064 serviced 1 files
+Thread 140026660169472 serviced 1 files
+Thread 140026634991360 serviced 1 files
+
+8 requester, 5 resolver:
+Number for requester thread = 8
+Number for resolver thread = 5
+**FAILURE due to # of requester threads exceeding MAX_REQUESTER_THREADS**
+Would imagine that it would execute at a similar speed to 5,5
+Total run time: xxx
+
+The tests were only run a couple of times so they are not the averaged runtimes due to a 
+lack of time to do so. The disrepancy between the runtimes of the scenarios (run manually)
+and the performance.py results may be due to averaging and DNS caching as some scenarios
+were ran before others, causing dns resolution results being cached and loaded on the next
+few scenarios. Another cause could be the presence of dead links that caused the dns function
+to have to time out to consider the link dead, adding to the runtime. In general, the 
+intuition is that if you have the same number of requester and resolver threads then the 
+program run time will be at its most efficient due to a 1:1 hand-off of outputs and inputs 
+between the the requester output and the resolver input. This can be seen in the graph at
+5,5 where the runtime dips. The greater the amount of requester AND resolvers, the faster 
+the runtime as there is more bandwidth to read input files, hand them off to the buffer, 
+and take from the buffer at a greater rate.
+
+However, if the number of requesters is less than the number of resolvers, a bottleneck will
+present itself in that the throughput of input files being added to the shared buffer
+is less than what the resolvers can take out of the buffer, leading the resolvers to 
+wait for the buffer to be filled, and so on. This can be seen in both the manual and 
+python performance figures where during scenarios when there were more resolver threads
+than requesters, the runtime increased. The same can be said in the case of a greater number
+of requesters than resolvers. The buffer will keep being filled by the requesters but there
+wont be enough resolvers to pull from the buffer.
